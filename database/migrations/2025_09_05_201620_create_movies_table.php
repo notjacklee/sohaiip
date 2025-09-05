@@ -11,12 +11,18 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::table('movies', function (Blueprint $table) {
-            //
-        });
-    }
+   public function up(): void
+{
+    Schema::create('movies', function (Blueprint $table) {
+        $table->id();
+        $table->string('title');
+        $table->string('genre');
+        $table->integer('year');
+        $table->text('description')->nullable();
+        $table->timestamps();
+    });
+}
+
 
     /**
      * Reverse the migrations.
@@ -25,8 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('movies', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('movies');
     }
 };

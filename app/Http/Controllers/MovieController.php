@@ -8,78 +8,78 @@ use Illuminate\Http\Request;
 class MovieController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Display a listing of the movies.
      */
     public function index()
     {
-        return view('welcome');
+        $movies = Movies::all(); // 从数据库取所有电影
+        return view('movies.index', compact('movies'));
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Show the form for creating a new movie.
      */
     public function create()
     {
-        //
+        return view('movies.create');
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Store a newly created movie in storage.
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'genre' => 'required|string|max:100',
+            'year' => 'required|integer',
+            'description' => 'nullable|string',
+        ]);
+
+        Movies::create($request->all());
+
+        return redirect()->route('movies.index')->with('success', 'Movie added successfully!');
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Movies  $movies
-     * @return \Illuminate\Http\Response
+     * Display the specified movie.
      */
-    public function show(Movies $movies)
+    public function show(Movies $movie)
     {
-        //
+        return view('movies.show', compact('movie'));
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Movies  $movies
-     * @return \Illuminate\Http\Response
+     * Show the form for editing the specified movie.
      */
-    public function edit(Movies $movies)
+    public function edit(Movies $movie)
     {
-        //
+        return view('movies.edit', compact('movie'));
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Movies  $movies
-     * @return \Illuminate\Http\Response
+     * Update the specified movie in storage.
      */
-    public function update(Request $request, Movies $movies)
+    public function update(Request $request, Movies $movie)
     {
-        //
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'genre' => 'required|string|max:100',
+            'year' => 'required|integer',
+            'description' => 'nullable|string',
+        ]);
+
+        $movie->update($request->all());
+
+        return redirect()->route('movies.index')->with('success', 'Movie updated successfully!');
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Movies  $movies
-     * @return \Illuminate\Http\Response
+     * Remove the specified movie from storage.
      */
-    public function destroy(Movies $movies)
+    public function destroy(Movies $movie)
     {
-        //
+        $movie->delete();
+        return redirect()->route('movies.index')->with('success', 'Movie deleted successfully!');
     }
 }
